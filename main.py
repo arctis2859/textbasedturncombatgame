@@ -5,6 +5,7 @@ import sys
 global playerHP
 global opponentHP
 global x
+global y
 
 
 def playerTurn():
@@ -27,25 +28,19 @@ def opponentTurn():
     if opponentHP < 0:
         opponentDeath()
     else:
-        b = random.randint(1, 6)
-        if b == 1:
-            opponentAttack()
-        elif b == 2:
-            opponentAttack()
-        elif b == 3:
-            opponentAttack()
-        elif b == 4:
-            opponentAttack()
-        elif b == 5:
-            opponentAttack()
+        b = random.randint(1, 2)
+        if b == 2:
+            opponentHealCounter()
         else:
-            opponentHeal()
+            opponentAttack()
 
 
 def playerAttack():
     global opponentHP
     global x
+    global y
     x = x - 1
+    y = y - 1
     playerDmg = random.randint(50, 100)
     playerCritchance = random.randint(1, 3)
     playerCritint = random.randint(1, 3)
@@ -77,11 +72,15 @@ def playerHealCounter():
 def playerHeal():
     global playerHP
     global x
+    global y
     x = 8
+    y = y - 1
     c = random.randint(100, 200)
     playerHP = playerHP + c
     if playerHP > 1000:
         playerHP = 1000
+        print("\033[0;37;48mHealed", c, "health")
+        opponentTurn()
     else:
         print("\033[0;37;48mHealed", c, "health.")
         opponentTurn()
@@ -96,13 +95,15 @@ def opponentAttack():
     time.sleep(1)
     global playerHP
     global x
+    global y
     x = x - 1
-    opponentDmg = random.randint(25, 75)
-    opponentCritchance = random.randint(1, 4)
-    opponentCritint = random.randint(1, 4)
+    y = y - 1
+    opponentDmg = random.randint(50, 100)
+    opponentCritchance = random.randint(1, 3)
+    opponentCritint = random.randint(1, 3)
     opponentCritmultiplier = random.randint(120, 200)
     if opponentCritint == opponentCritchance:
-        opponentDmg = 75
+        opponentDmg = 100
         opponentNetdmg = opponentDmg * (opponentCritmultiplier * 0.01)
         opponentNetdmg = math.ceil(opponentNetdmg)
         playerHP = playerHP - opponentNetdmg
@@ -116,15 +117,27 @@ def opponentAttack():
         playerTurn()
 
 
+def opponentHealCounter():
+    global y
+    if y > 1:
+        opponentAttack()
+    else:
+        opponentHeal()
+
+
 def opponentHeal():
     time.sleep(1)
     global opponentHP
     global x
+    global y
+    y = 8
     x = x - 1
     d = random.randint(100, 200)
     opponentHP = opponentHP + d
     if opponentHP > 1000:
         opponentHP = 1000
+        print("\033[0;37;58mThe enemy healed", d, "health.")
+        playerTurn()
     else:
         print("\033[0;37;48mThe enemy healed", d, "health.")
         playerTurn()
@@ -139,9 +152,11 @@ def reset():
     global playerHP
     global opponentHP
     global x
+    global y
     playerHP = 1000
     opponentHP = 1000
     x = 1
+    y = 1
     playerTurn()
 
 
