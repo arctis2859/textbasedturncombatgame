@@ -1,12 +1,3 @@
----
-name: BUG_REPORT
-about: Found a bug? You've come to the right place.
-title: BUG
-labels: ''
-assignees: ''
-
----
-
 **Describe the bug**
 A clear and concise description of what the bug is.
 
