@@ -1,4 +1,4 @@
-# Text Bases Turn Combat Game
+# Text Based Turn Combat Game
 
 ## Contributors
 
