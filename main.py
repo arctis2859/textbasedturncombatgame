@@ -28,7 +28,6 @@ def print_type(array, speed=0.05):
 
     a.append("\n")
     if not dev:  # Within the PyCharm Environment outputting characters at this speed can cause issues
-        a.append("\n")
 
         for string in a:
             for char in string:
@@ -72,8 +71,8 @@ class Character:
         """
         if self.bot:
             c = random.randint(1, 2)
-            if c == 2:
-                self.heal_check()
+            if c == 2 and self.heal_check():
+                self.heal()
             else:
                 self.attack()
         else:
@@ -85,7 +84,7 @@ class Character:
             elif answer.lower() == "h":
                 self.heal_check()
             else:
-                print_type(["\033[0;31;50mEnter 'a' or 'h'."])
+                print_type(["\033[0;31;50mEnter 'a' or 'h'.\033[0m"])
                 self.turn()
 
     def attack(self):
@@ -124,14 +123,19 @@ class Character:
     def heal_check(self):
         """
         Check if the cooldown is at zero to allow for healing
-        :return: None
+        :return: Dependant
         """
         if self.heal_cooldown > 0:
             if not self.bot:
                 print_type(["You cannot heal for another ", self.heal_cooldown, " turns."])
                 self.turn()
+            else:
+                return False
         else:
-            self.heal()
+            if not self.bot:
+                self.heal()
+            else:
+                return True
 
     def heal(self):
         """
