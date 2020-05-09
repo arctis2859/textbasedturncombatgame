@@ -109,7 +109,7 @@ class Character:
                 print_type(["You land a critical hit, dealing ", player_net_dmg, " damage to the enemy. The enemy has ",
                             self.opponent.hp, " health remaining."])
             else:
-                print_type([" Opponent hit a critical hit, dealing ", player_net_dmg, " damage to you. You have ",
+                print_type(["Opponent hit a critical hit, dealing ", player_net_dmg, " damage to you. You have ",
                             self.opponent.hp, " health remaining."])
         else:
             self.opponent.hp -= player_dmg
