@@ -113,7 +113,7 @@ def opponentAttack():
     else:
         playerHP = playerHP - opponentDmg
         print("\033[0;37;48mThe enemy strikes you, dealing", opponentDmg, "damage. You have", playerHP,
-              "healh remaining.")
+              "health remaining.")
         playerTurn()
 
 
@@ -145,6 +145,8 @@ def opponentHeal():
 
 def opponentDeath():
     print("YOU WIN!")
+    print("A game by Arctis   https://github.com/XxArcticAssassinxX")
+    print("and Morgan West    https://github.com/morganz13")
     sys.exit()
 
 
