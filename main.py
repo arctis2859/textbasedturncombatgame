@@ -1,165 +1,201 @@
+"""
+File:    main.py
+Author1:  Arctis   (https://github.com/XxArcticAssassinxX)
+Author2:  M0RGANZ  (https://github.com/morganzwest) [https://morganz.co.uk]
+"""
+
 import random
 import math
 import time
 import sys
-global playerHP
-global opponentHP
-global x
-global y
+
+dev = False
 
 
-def playerTurn():
-    global playerHP
-    if playerHP < 0:
-        playerDeath()
+def print_type(array, speed=0.05):
+    """
+    This function takes an array of values then flushes each
+    character "one by one" outputs them instead of default print()
+
+    :param array: Array of values to be printed
+    :param speed: The partition between each character being printed
+    :return: None
+    """
+
+    a = []
+    for node in array:
+        a.append(str(node))
+
+    a.append("\n")
+    if not dev:  # Within the PyCharm Environment outputting characters at this speed can cause issues
+        a.append("\n")
+
+        for string in a:
+            for char in string:
+                time.sleep(speed)
+                sys.stdout.write(char)
+                sys.stdout.flush()
+
     else:
-        a = input("\033[0;37;48mAttack(a) or heal(h): ")
-        if a == "a":
-            playerAttack()
-        elif a == "h":
-            playerHealCounter()
+        print(a)
+
+
+# This will store the BOT and PLAYER so they are easily accessible
+characters = []
+
+
+class Character:
+    def __init__(self, health: int, bot=False):
+        self.hp = health
+        self.heal_cooldown = 1
+        self.bot = bot
+        self.opponent = None
+
+    def set_op(self):
+        """
+        This function assigns the other instance as the opponent
+        :return: None
+        """
+
+        if self.bot:
+            self.opponent = characters[0]
         else:
-            print("\033[0;31;50mEnter 'a' or 'h'.")
-            playerTurn()
+            self.opponent = characters[1]
 
+    def turn(self):
+        """
+        This function will be run every single loop
+        It checks which move the player wants to play
+        and then runs the other functions within the class
 
-def opponentTurn():
-    global opponentHP
-    if opponentHP < 0:
-        opponentDeath()
-    else:
-        b = random.randint(1, 2)
-        if b == 2:
-            opponentHealCounter()
+        :return: Sub Formative's
+        """
+        if self.bot:
+            c = random.randint(1, 2)
+            if c == 2:
+                self.heal_check()
+            else:
+                self.attack()
         else:
-            opponentAttack()
+            print_type(["Attack(A) or heal(H): "])
+            answer = input("> ")
+            # answer.lower() just so the player cannot break the script as easily
+            if answer.lower() == "a":
+                self.attack()
+            elif answer.lower() == "h":
+                self.heal_check()
+            else:
+                print_type(["\033[0;31;50mEnter 'a' or 'h'."])
+                self.turn()
 
+    def attack(self):
+        """
+        This function conditions all the damage onto the other instance
+        :return: None
+        """
+        self.heal_cooldown -= 1
+        self.opponent.heal_cooldown -= 1
+        player_dmg = random.randint(50, 100)
+        player_critical_chance = random.randint(1, 3)
+        player_critical_int = random.randint(1, 3)
+        player_net_dmg = random.randint(120, 200)
 
-def playerAttack():
-    global opponentHP
-    global x
-    global y
-    x = x - 1
-    y = y - 1
-    playerDmg = random.randint(50, 100)
-    playerCritchance = random.randint(1, 3)
-    playerCritint = random.randint(1, 3)
-    playerCritmultiplier = random.randint(120, 200)
-    if playerCritint == playerCritchance:
-        playerDmg = 100
-        playerNetdmg = playerDmg * (playerCritmultiplier * 0.01)
-        playerNetdmg = math.ceil(playerNetdmg)
-        opponentHP = opponentHP - playerNetdmg
-        print("\033[0;37;48mYou land a critical hit, dealing", playerNetdmg, "damage to the enemy. The enemy has",
-              opponentHP, "health remaining.")
-        opponentTurn()
-    else:
-        opponentHP = opponentHP - playerDmg
-        print("\033[0;37;48mYou strike the enemy, dealing", playerDmg, "damage. The enemy has", opponentHP,
-              "health remaining.")
-        opponentTurn()
+        if player_critical_int == player_critical_chance:
 
+            player_net_dmg = math.ceil(player_net_dmg)
+            self.opponent.hp -= player_net_dmg
 
-def playerHealCounter():
-    global x
-    if x > 1:
-        print("\033[0;31;50mYou cannot heal for another", x, "turns.")
-        playerTurn()
-    else:
-        playerHeal()
+            # Different outputs depending if it is the BOT instance
+            if not self.bot:
+                print_type(["You land a critical hit, dealing ", player_net_dmg, " damage to the enemy. The enemy has ",
+                            self.opponent.hp, " health remaining."])
+            else:
+                print_type([" Opponent hit a critical hit, dealing ", player_net_dmg, " damage to you. You have ",
+                            self.opponent.hp, " health remaining."])
+        else:
+            self.opponent.hp -= player_dmg
+            if not self.bot:
+                print_type(["You strike the enemy, dealing ", player_dmg, " damage. The enemy has ", self.opponent.hp,
+                            " health remaining."])
+            else:
+                print_type(["The enemy strikes, dealing ", player_dmg, " damage. You now have ", self.opponent.hp,
+                            " health remaining."])
 
+    def heal_check(self):
+        """
+        Check if the cooldown is at zero to allow for healing
+        :return: None
+        """
+        if self.heal_cooldown > 0:
+            if not self.bot:
+                print_type(["You cannot heal for another ", self.heal_cooldown, " turns."])
+                self.turn()
+        else:
+            self.heal()
 
-def playerHeal():
-    global playerHP
-    global x
-    global y
-    x = 8
-    y = y - 1
-    c = random.randint(100, 200)
-    playerHP = playerHP + c
-    if playerHP > 1000:
-        playerHP = 1000
-        print("\033[0;37;48mHealed", c, "health")
-        opponentTurn()
-    else:
-        print("\033[0;37;48mHealed", c, "health.")
-        opponentTurn()
+    def heal(self):
+        """
+        Reset the cooldown to default and output the random health change
+        :return: None
+        """
+        self.heal_cooldown = 8
+        self.opponent.heal_cooldown -= 1
+        c = random.randint(100, 200)
+        self.hp += c
+        if self.hp > 1000:
+            self.hp = 1000
 
+        # Different output depending on if the instance is a BOT
+        if not self.bot:
+            print_type(["Healed ", c, " health."])
+        else:
+            print_type(["Opponent Healed ", c, " health"])
 
-def playerDeath():
-    print("YOU DIED!")
-    sys.exit()
-
-
-def opponentAttack():
-    time.sleep(1)
-    global playerHP
-    global x
-    global y
-    x = x - 1
-    y = y - 1
-    opponentDmg = random.randint(50, 100)
-    opponentCritchance = random.randint(1, 3)
-    opponentCritint = random.randint(1, 3)
-    opponentCritmultiplier = random.randint(120, 200)
-    if opponentCritint == opponentCritchance:
-        opponentDmg = 100
-        opponentNetdmg = opponentDmg * (opponentCritmultiplier * 0.01)
-        opponentNetdmg = math.ceil(opponentNetdmg)
-        playerHP = playerHP - opponentNetdmg
-        print("\033[0;37;48mThe enemy lands a critical hit, dealing", opponentNetdmg, "damage. You have", playerHP,
-              "health remaining.")
-        playerTurn()
-    else:
-        playerHP = playerHP - opponentDmg
-        print("\033[0;37;48mThe enemy strikes you, dealing", opponentDmg, "damage. You have", playerHP,
-              "health remaining.")
-        playerTurn()
-
-
-def opponentHealCounter():
-    global y
-    if y > 1:
-        opponentAttack()
-    else:
-        opponentHeal()
-
-
-def opponentHeal():
-    time.sleep(1)
-    global opponentHP
-    global x
-    global y
-    y = 8
-    x = x - 1
-    d = random.randint(100, 200)
-    opponentHP = opponentHP + d
-    if opponentHP > 1000:
-        opponentHP = 1000
-        print("\033[0;37;58mThe enemy healed", d, "health.")
-        playerTurn()
-    else:
-        print("\033[0;37;48mThe enemy healed", d, "health.")
-        playerTurn()
-
-
-def opponentDeath():
-    print("YOU WIN!")
-    print("A game by Arctis   https://github.com/XxArcticAssassinxX")
-    print("and Morgan West    https://github.com/morganz13")
-    sys.exit()
+    @staticmethod
+    def death():
+        print_type(["You Died"])
 
 
 def reset():
-    global playerHP
-    global opponentHP
-    global x
-    global y
-    playerHP = 1000
-    opponentHP = 1000
-    x = 1
-    y = 1
-    playerTurn()
+    """
+    Setup the game
+    :return: None
+    """
+    player = Character(1000)
+    bot = Character(1000, bot=True)
+    characters.append(player)
+    characters.append(bot)
+
+    player.set_op()
+    bot.set_op()
+
+    run = True
+    while run:
+
+        if dev:
+            for c in characters:
+                print(c.bot, c.hp, c.heal_cooldown)
+
+        # Check the array of characters in-case one of them is dead
+        for character in characters:
+            if character.hp <= 0:
+
+                character.death()
+                # Break the game loop
+                run = False
+
+            else:
+                pass
+
+            character.turn()
+
+    # When the game ends this will run
+    else:
+        print_type(["A GAME BY:\n"])
+        time.sleep(.5)
+        print("Arctis:   https://github.com/XxArcticAssassinxX")
+        print("M0RGANZ:  https://github.com/morganzwest - https://morganz.co.uk")
 
 
-reset()
+if __name__ == "__main__":
+    reset()
