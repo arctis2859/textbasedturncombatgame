@@ -8,6 +8,32 @@ import random
 import math
 import time
 import sys
+from colorama import Fore, init
+
+# Colors
+init()
+class color:
+    colors = {
+        "reset": Fore.RESET,
+        "red": Fore.RED,
+        "yellow": Fore.YELLOW,
+        "black": Fore.BLACK,
+        "blue": Fore.BLUE,
+        "cyan": Fore.CYAN,
+        "green": Fore.GREEN,
+        "magenta": Fore.MAGENTA
+    }
+
+    @classmethod
+    def place(cls, color: str):
+        """
+        :usage: print(color.place("cyan"))
+        :param color: string of the color
+        :return: Color Value
+        """
+        return cls.colors[color.lower()]
+
+# Colors
 
 dev = False
 
@@ -91,7 +117,7 @@ class Character:
                 elif answer.lower() == "h":
                     self.heal_check()
                 else:
-                    print_type(["\033[0;31;50mEnter 'a' or 'h'.\033[0;0;48m"])
+                    print_type([color.place("red"), "Enter 'a' or 'h'.", color.place("reset")])
                     self.turn()
 
     def attack(self):
