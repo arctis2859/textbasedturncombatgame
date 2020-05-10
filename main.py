@@ -12,7 +12,7 @@ import sys
 dev = False
 
 
-def print_type(array, speed=0.05):
+def print_type(array, speed=0.02):
     """
     This function takes an array of values then flushes each
     character "one by one" outputs them instead of default print()
@@ -61,6 +61,12 @@ class Character:
         else:
             self.opponent = characters[1]
 
+    def __check_helth(self):
+        if self.hp <= 0:
+            return False
+        else:
+            return True
+
     def turn(self):
         """
         This function will be run every single loop
@@ -69,23 +75,24 @@ class Character:
 
         :return: Sub Formative's
         """
-        if self.bot:
-            c = random.randint(1, 2)
-            if c == 2 and self.heal_check():
-                self.heal()
+        if self.__check_helth():  # Null Move Check
+            if self.bot:
+                c = random.randint(1, 2)
+                if c == 2:
+                    self.heal_check()
+                else:
+                    self.attack()
             else:
-                self.attack()
-        else:
-            print_type(["Attack(A) or heal(H): "])
-            answer = input("> ")
-            # answer.lower() just so the player cannot break the script as easily
-            if answer.lower() == "a":
-                self.attack()
-            elif answer.lower() == "h":
-                self.heal_check()
-            else:
-                print_type(["\033[0;31;50mEnter 'a' or 'h'.\033[0m"])
-                self.turn()
+                print_type(["Attack(A) or heal(H): "])
+                answer = input("> ")
+                # answer.lower() just so the player cannot break the script as easily
+                if answer.lower() == "a":
+                    self.attack()
+                elif answer.lower() == "h":
+                    self.heal_check()
+                else:
+                    print_type(["\033[0;31;50mEnter 'a' or 'h'.\033[0;0;48m"])
+                    self.turn()
 
     def attack(self):
         """
@@ -123,19 +130,16 @@ class Character:
     def heal_check(self):
         """
         Check if the cooldown is at zero to allow for healing
-        :return: Dependant
+        :return: None
         """
         if self.heal_cooldown > 0:
             if not self.bot:
                 print_type(["You cannot heal for another ", self.heal_cooldown, " turns."])
                 self.turn()
             else:
-                return False
+                self.attack()
         else:
-            if not self.bot:
-                self.heal()
-            else:
-                return True
+            self.heal()
 
     def heal(self):
         """
@@ -199,6 +203,7 @@ def reset():
         time.sleep(.5)
         print("Arctis:   https://github.com/XxArcticAssassinxX")
         print("M0RGANZ:  https://github.com/morganzwest - https://morganz.co.uk")
+        time.sleep(15)  # Hold the window open
 
 
 if __name__ == "__main__":
