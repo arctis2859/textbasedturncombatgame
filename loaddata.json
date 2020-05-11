@@ -1,0 +1,29 @@
+[
+  {
+    "name": "Wizard",
+    "actions": [
+      "casts a spell",
+      "casts a curse"
+    ],
+    "damage": [50, 100],
+    "def-cool": 8
+  },
+  {
+    "name": "Rogue",
+    "actions": [
+      "farts on you",
+      "punches you"
+    ],
+    "damage": [30, 70],
+    "def-cool": 8
+  },
+  {
+    "name": "Knight",
+    "actions": [
+      "hits you with his sword",
+      "rams you with his shield"
+    ],
+    "damage": [60, 120],
+    "def-cool": 8
+  }
+]
