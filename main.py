@@ -220,9 +220,7 @@ def reset():
                 run = False
 
             else:
-                pass
-
-            character.turn()
+                character.turn()
 
     # When the game ends this will run
     else:
