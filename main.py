@@ -2,6 +2,7 @@
 File:    main.py
 Author1:  Arctis   (https://github.com/XxArcticAssassinxX)
 Author2:  M0RGANZ  (https://github.com/morganzwest) [https://morganz.co.uk]
+Version 0.2.38
 """
 
 import random
