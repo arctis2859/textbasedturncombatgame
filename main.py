@@ -34,7 +34,7 @@ class color:
         return cls.colors[color.lower()]
 # Colors
 
-dev = True
+dev = False
 
 
 def print_type(array, speed=0.02):
