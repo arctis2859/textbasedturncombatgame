@@ -34,7 +34,7 @@ class color:
         return cls.colors[color.lower()]
 # Colors
 
-dev = False
+dev = True
 
 
 def print_type(array, speed=0.02):
@@ -220,9 +220,7 @@ def reset():
                 run = False
 
             else:
-                pass
-
-            character.turn()
+                character.turn()
 
     # When the game ends this will run
     else:
