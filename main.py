@@ -13,6 +13,7 @@ import json
 from colors import color
 
 dev = False
+version = "0.2.38"
 
 # Get Data
 with open("loaddata.json", "r") as file:
@@ -118,6 +119,8 @@ class Character:
                     self.attack()
                 elif answer.lower() == "h":
                     self.heal_check()
+                elif answer.lower() == "version":
+                    print_type([f"Version: {version}"])
                 else:
                     print_type([color.place("red"), "Enter 'a' or 'h'.", color.place("reset")])
                     self.turn()
@@ -232,6 +235,7 @@ def reset():
         time.sleep(.5)
         print("Arctis:   https://github.com/XxArcticAssassinxX")
         print("M0RGANZ:  https://github.com/morganzwest - https://morganz.co.uk")
+        print(f"Version: {version}")
         time.sleep(15)  # Hold the window open
 
 
