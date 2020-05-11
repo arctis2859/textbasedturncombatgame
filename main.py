@@ -8,10 +8,15 @@ import random
 import math
 import time
 import sys
-import colors
+import json
 from colors import color
 
 dev = False
+
+# Get Data
+with open("loaddata.json", "r") as file:
+    character_load = json.load(file)
+# Get Data
 
 
 def print_type(array, speed=0.02):
@@ -52,6 +57,26 @@ class Character:
         self.bot = bot
         self.opponent = None
 
+        # Assign the type of opponent
+        if self.bot:  # BOT
+
+            try:
+                self.type = character_load[random.randint(1, len(character_load))]
+            except IndexError:
+                self.type = character_load[random.randint(1, len(character_load))]
+
+            self.name = self.type["name"]
+            self.actions = self.type["actions"]
+            self.damage = self.type["damage"]
+            self.default_cooldown = self.type["def-cool"]
+
+        else:  # PLAYER
+            self.type = None
+            self.actions = "strikes"
+            self.damage = [50, 100]
+            self.default_cooldown = 8
+        # Assign the type of opponent
+
     def set_op(self):
         """
         This function assigns the other instance as the opponent
@@ -63,7 +88,7 @@ class Character:
         else:
             self.opponent = characters[1]
 
-    def __check_helth(self):
+    def __check_health(self):
         if self.hp <= 0:
             return False
         else:
@@ -77,7 +102,7 @@ class Character:
 
         :return: Sub Formative's
         """
-        if self.__check_helth():  # Null Move Check
+        if self.__check_health():  # Null Move Check
             if self.bot:
                 c = random.randint(1, 2)
                 if c == 2:
@@ -103,7 +128,7 @@ class Character:
         """
         self.heal_cooldown -= 1
         self.opponent.heal_cooldown -= 1
-        player_dmg = random.randint(50, 100)
+        player_dmg = random.randint(self.damage[0], self.damage[1])
         player_critical_chance = random.randint(1, 3)
         player_critical_int = random.randint(1, 3)
         player_net_dmg = random.randint(120, 200)
@@ -115,18 +140,18 @@ class Character:
 
             # Different outputs depending if it is the BOT instance
             if not self.bot:
-                print_type(["You land a critical hit, dealing ", player_net_dmg, " damage to the enemy. The enemy has ",
+                print_type(["You land a critical hit, dealing ", player_net_dmg, f" damage to the {self.opponent.name}. The enemy has ",
                             self.opponent.hp, " health remaining."])
             else:
-                print_type(["Opponent hit a critical hit, dealing ", player_net_dmg, " damage to you. You have ",
+                print_type([f"{self.name} hit a critical hit, dealing ", player_net_dmg, " damage to you. You have ",
                             self.opponent.hp, " health remaining."])
         else:
             self.opponent.hp -= player_dmg
             if not self.bot:
-                print_type(["You strike the enemy, dealing ", player_dmg, " damage. The enemy has ", self.opponent.hp,
+                print_type(["You strike the enemy, dealing ", player_dmg, f" damage. The {self.opponent.name} has ", self.opponent.hp,
                             " health remaining."])
             else:
-                print_type(["The enemy strikes, dealing ", player_dmg, " damage. You now have ", self.opponent.hp,
+                print_type([f"The {self.opponent.name} strikes, dealing ", player_dmg, " damage. You now have ", self.opponent.hp,
                             " health remaining."])
 
     def heal_check(self):
@@ -148,7 +173,7 @@ class Character:
         Reset the cooldown to default and output the random health change
         :return: None
         """
-        self.heal_cooldown = 8
+        self.heal_cooldown = self.default_cooldown
         self.opponent.heal_cooldown -= 1
         c = random.randint(100, 200)
         self.hp += c
@@ -159,13 +184,13 @@ class Character:
         if not self.bot:
             print_type(["Healed ", c, " health."])
         else:
-            print_type(["Opponent Healed ", c, " health"])
+            print_type([f"{self.name} Healed ", c, " health"])
 
     def death(self):
         if not self.bot:
             print_type(["You DIED"])
         else:
-            print_type(["YOU KILLED THE BOT"])
+            print_type([f"YOU KILLED THE {self.name.upper()}"])
 
 
 def reset():
@@ -182,6 +207,7 @@ def reset():
     bot.set_op()
 
     run = True
+    print_type(["You have found a ", bot.name])
     while run:
 
         if dev:
