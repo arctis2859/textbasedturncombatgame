@@ -32,7 +32,6 @@ class color:
         :return: Color Value
         """
         return cls.colors[color.lower()]
-
 # Colors
 
 dev = False
@@ -185,9 +184,11 @@ class Character:
         else:
             print_type(["Opponent Healed ", c, " health"])
 
-    @staticmethod
-    def death():
-        print_type(["You Died"])
+    def death(self):
+        if not self.bot:
+            print_type(["You DIED"])
+        else:
+            print_type(["YOU KILLED THE BOT"])
 
 
 def reset():
