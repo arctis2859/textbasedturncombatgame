@@ -1,4 +1,5 @@
 # Text Based Turn Combat Game
+Join our [Discord](https://discord.gg/xajUDUr)!
 
 ## Contributors
 
