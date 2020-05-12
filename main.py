@@ -2,7 +2,7 @@
 File:    main.py
 Author1:  Arctis   (https://github.com/XxArcticAssassinxX)
 Author2:  M0RGANZ  (https://github.com/morganzwest) [https://morganz.co.uk]
-Version 0.2.38
+Version 0.2.47
 """
 
 import random
@@ -13,7 +13,7 @@ import json
 from colors import color
 
 dev = False
-version = "0.2.38"
+version = "0.2.47"
 
 # Get Data
 with open("loaddata.json", "r") as file:
