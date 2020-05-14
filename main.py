@@ -144,19 +144,20 @@ class Character:
 
             # Different outputs depending if it is the BOT instance
             if not self.bot:
-                print_type(["You land a critical hit, dealing ", player_net_dmg, f" damage to the {self.opponent.name}. The enemy has ",
-                            self.opponent.hp, " health remaining."])
+                print_type(["You land a critical hit, dealing ", player_net_dmg,
+                            f" damage to the {self.opponent.name}. The enemy has ", self.opponent.hp,
+                            " health remaining."])
             else:
                 print_type([f"{self.name} hit a critical hit, dealing ", player_net_dmg, " damage to you. You have ",
                             self.opponent.hp, " health remaining."])
         else:
             self.opponent.hp -= player_dmg
             if not self.bot:
-                print_type(["You strike the enemy, dealing ", player_dmg, f" damage. The {self.opponent.name} has ", self.opponent.hp,
-                            " health remaining."])
+                print_type(["You strike the enemy, dealing ", player_dmg, f" damage. The {self.opponent.name} has ",
+                            self.opponent.hp, " health remaining."])
             else:
-                print_type([f"The {self.opponent.name} strikes, dealing ", player_dmg, " damage. You now have ", self.opponent.hp,
-                            " health remaining."])
+                print_type([f"The {self.opponent.name} strikes, dealing ", player_dmg, " damage. You now have ",
+                            self.opponent.hp, " health remaining."])
 
     def heal_check(self):
         """
