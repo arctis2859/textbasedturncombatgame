@@ -13,7 +13,7 @@ import json
 from colors import color
 
 dev = False
-version = "0.2.47"
+version = "0.2.52"
 
 # Get Data
 with open("loaddata.json", "r") as file:
